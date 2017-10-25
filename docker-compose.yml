@@ -1,0 +1,34 @@
+version: "2"
+services:
+  phoenix:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PG_USERNAME: postgres
+      PG_PASSWORD: postgres
+      PG_HOST: postgres
+    ports:
+      - "6600:4000"
+    volumes:
+      - .:/app
+    links:
+      - postgres
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:9.6.5-alpine
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: teelog_dev
+    volumes_from:
+      - db_data
+  db_data:
+    image: postgres:9.6.5-alpine
+    volumes:
+      - /var/lib/postgres
+volumes:
+  db_data:
